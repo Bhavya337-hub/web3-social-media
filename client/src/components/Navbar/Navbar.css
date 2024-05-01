@@ -1,0 +1,16 @@
+.username {
+    font-size: 1.5rem;
+}
+
+.profile-img {
+    width: 8rem;
+    border-radius: 0.5rem;
+    border: 0.2rem solid var(--background-color);
+}
+
+.banner-img {
+    height: 6rem;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}

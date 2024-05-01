@@ -3,13 +3,12 @@
 pragma solidity ^0.8.0;
 
 contract SocialMedia {
-
     struct User {
         string username;
         string bio;
         string profilePictureHash;
         uint timestamp;
-        uint[] posts;
+        uint[] posts;   
     }
 
     struct Post {
@@ -36,7 +35,12 @@ contract SocialMedia {
 
     uint public postCount;
 
-    event UserCreated(string username, string bio, string profilePictureHash, uint timestamp);
+    event UserCreated(
+        string username,
+        string bio,
+        string profilePictureHash,
+        uint timestamp
+    );
     event PostCreated(string content, string mediaHash, uint timestamp);
     event PostLiked(address user, uint timestamp);
     event CommentCreated(address user, string content, uint timestamp);
@@ -44,24 +48,53 @@ contract SocialMedia {
     event Unfollowed(address follower, address followee, uint timestamp);
 
     modifier userExists() {
-        require(bytes(users[msg.sender].username).length > 0, "User does not exist");
+        require(
+            bytes(users[msg.sender].username).length > 0,
+            "User does not exist"
+        );
         _;
     }
 
-    function createUser(string memory _username, string memory _bio, string memory _profilePictureHash) public {
+    function createUser(
+        string memory _username,
+        string memory _bio,
+        string memory _profilePictureHash
+    ) public {
         require(bytes(_username).length > 0, "Username is required");
         require(bytes(_bio).length > 0, "Bio is required");
-        require(bytes(_profilePictureHash).length > 0, "Profile picture hash is required");
+        require(
+            bytes(_profilePictureHash).length > 0,
+            "Profile picture hash is required"
+        );
 
-        users[msg.sender] = User(_username, _bio, _profilePictureHash, block.timestamp, new uint[](0));
+        users[msg.sender] = User(
+            _username,
+            _bio,
+            _profilePictureHash,
+            block.timestamp,
+            new uint[](0)
+        );
 
         emit UserCreated(_username, _bio, _profilePictureHash, block.timestamp);
     }
 
-    function createPost(string memory _content, string memory _mediaHash) public userExists {
-        require(bytes(_content).length > 0 || bytes(_mediaHash).length > 0, "Content or media hash is required");
+    function createPost(
+        string memory _content,
+        string memory _mediaHash
+    ) public userExists {
+        require(
+            bytes(_content).length > 0 || bytes(_mediaHash).length > 0,
+            "Content or media hash is required"
+        );
 
-        posts[postCount] = Post(msg.sender, _content, _mediaHash, block.timestamp, 0, 0);
+        posts[postCount] = Post(
+            msg.sender,
+            _content,
+            _mediaHash,
+            block.timestamp,
+            0,
+            0
+        );
         users[msg.sender].posts.push(postCount);
         postCount++;
 
@@ -86,11 +119,18 @@ contract SocialMedia {
         emit PostLiked(msg.sender, block.timestamp);
     }
 
-    function commentOnPost(uint _postId, string memory _content) public userExists {
+    function commentOnPost(
+        uint _postId,
+        string memory _content
+    ) public userExists {
         require(_postId < postCount, "Post does not exist");
         require(bytes(_content).length > 0, "Comment content is required");
 
-        postComments[_postId][posts[_postId].comments] = Comment(msg.sender, _content, block.timestamp);
+        postComments[_postId][posts[_postId].comments] = Comment(
+            msg.sender,
+            _content,
+            block.timestamp
+        );
         posts[_postId].comments++;
         emit CommentCreated(msg.sender, _content, block.timestamp);
     }
@@ -103,7 +143,9 @@ contract SocialMedia {
         return users[_user].posts;
     }
 
-    function getPostComments(uint _postId) public view returns (Comment[] memory) {
+    function getPostComments(
+        uint _postId
+    ) public view returns (Comment[] memory) {
         Comment[] memory comments = new Comment[](posts[_postId].comments);
         for (uint i = 0; i < posts[_postId].comments; i++) {
             comments[i] = postComments[_postId][i];
@@ -130,8 +172,12 @@ contract SocialMedia {
         emit Unfollowed(msg.sender, _user, block.timestamp);
     }
 
-    function getFollowers(address _user) public view returns (address[] memory) {
-        address[] memory _followers = new address[](followersArray[_user].length);
+    function getFollowers(
+        address _user
+    ) public view returns (address[] memory) {
+        address[] memory _followers = new address[](
+            followersArray[_user].length
+        );
 
         uint count = 0;
         for (uint i = 0; i < followersArray[_user].length; i++) {
