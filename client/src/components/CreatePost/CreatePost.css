@@ -15,17 +15,6 @@
     overflow-y: hidden;
 }
 
-/* .text-box {
-    outline: none;
-    resize: none;
-    color: var(--text-color);
-    font-size: 1rem;
-    font-weight: 400;
-    font-style: normal;
-    font-optical-sizing: auto;
-    font-variation-settings: "wdth" 100;
-} */
-
 .username {
     font-size: 1rem;
     font-weight: 600;

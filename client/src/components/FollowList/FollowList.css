@@ -1,0 +1,11 @@
+.follow-btn {
+    padding: 0.5rem;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border: 0;
+}
+
+.follow-btn:hover {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+}

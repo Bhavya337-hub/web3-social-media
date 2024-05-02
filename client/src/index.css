@@ -13,3 +13,7 @@ body {
   font-variation-settings:
     "wdth" 100;
 }
+
+.btn-login {
+  width: 2.5rem;
+}
