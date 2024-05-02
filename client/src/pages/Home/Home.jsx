@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import CreatePost from "../../components/CreatePost/CreatePost";
+import Post from "../../components/Post/Post";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
           </div>
           <div className="col-md-6">
             <CreatePost />
+            <Post />
           </div>
           <div className="col-md-3">{/* <FollowersList /> */}</div>
         </div>
