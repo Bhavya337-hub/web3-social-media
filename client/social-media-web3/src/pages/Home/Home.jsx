@@ -7,16 +7,53 @@ import FollowList from "../../components/FollowList/FollowList";
 import Welcome from "../Welcome/Welcome";
 import ConnectButton from "../../components/ConnectButton";
 
+import { readContract, writeContract } from "@wagmi/core";
+import { config } from "../../../config";
+import { SocialMediaABI, SocialMediaAddress } from "../../Context/constants";
+import { useSocialMedia } from "../../Context/SocialMediaContext";
+
 const Home = () => {
-  const [user, setUser] = useState(null);
+  const { address } = useSocialMedia();
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    setUser(JSON.parse(localStorage.getItem("user")));
-  }, []);
-
-  if (!user) {
+  if (!localStorage.getItem("isRegistered")) {
     return <Welcome />;
   }
+
+  useEffect(() => {
+    if (!localStorage.getItem("isRegistered")) {
+      window.location.href = "/welcome";
+    } else {
+      getPosts();
+    }
+  }, [localStorage.getItem("isRegistered")]);
+
+  const getPosts = async () => {
+    try {
+      const res = await readContract(config, {
+        abi: SocialMediaABI,
+        address: SocialMediaAddress,
+        functionName: "getFollowingUsersPosts",
+        account: address,
+      });
+
+      setPosts(res);
+
+      for (let i = 0; i < res.length; i++) {
+        const user = await readContract(config, {
+          abi: SocialMediaABI,
+          address: SocialMediaAddress,
+          functionName: "getUser",
+          args: [res[i].user],
+        });
+
+        setUsers((prev) => [...prev, user]);
+      }
+    } catch (error) {
+      console.log("Error while fetching posts", error);
+    }
+  };
 
   return (
     <div className="Home">
@@ -27,7 +64,9 @@ const Home = () => {
           </div>
           <div className="col-md-6">
             <CreatePost />
-            {/* <Post */}
+            {users && posts && posts.map((post, index) => (
+              <Post key={index} post={post} user={users[index]} />
+            ))}
           </div>
           <div className="col-md-3">
             <ConnectButton />

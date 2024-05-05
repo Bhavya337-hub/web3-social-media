@@ -24,11 +24,25 @@ const FollowList = () => {
         account: address,
       });
 
-      console.log("Users", res);
-
       setUsers(res);
     } catch (error) {
       console.log("Error while fetching users", error);
+    }
+  };
+
+  const followUser = async (user) => {
+    try {
+      await writeContract(config, {
+        abi: SocialMediaABI,
+        address: SocialMediaAddress,
+        functionName: "followUser",
+        args: [user.user],
+        account: address,
+      });
+
+      getUsers();
+    } catch (error) {
+      console.log("Error while following user", error);
     }
   };
 
@@ -60,6 +74,7 @@ const FollowList = () => {
                     <button
                       className="btn btn-link"
                       style={{ textDecoration: "none" }}
+                      onClick={() => followUser(user)}
                     >
                       <div className="d-flex align-items-center rounded-circle ms-auto follow-btn">
                         <span className="material-symbols-outlined fs-5">

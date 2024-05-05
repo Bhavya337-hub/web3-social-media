@@ -6,11 +6,14 @@ import "hardhat/console.sol";
 
 contract SocialMedia {
     struct User {
+        address user;
         string username;
         string bio;
         string profilePictureHash;
         uint timestamp;
         uint[] posts;
+        uint followers;
+        uint following;
     }
 
     struct Post {
@@ -79,11 +82,14 @@ contract SocialMedia {
         );
 
         users[msg.sender] = User(
+            msg.sender,
             _username,
             _bio,
             _profilePictureHash,
             block.timestamp,
-            new uint[](0)
+            new uint[](0),
+            0,
+            0
         );
 
         usersArray.push(msg.sender);
@@ -104,7 +110,7 @@ contract SocialMedia {
         uint count = 0;
         for (uint i = 0; i < usersArray.length; i++) {
             if (
-                !followers[msg.sender][usersArray[i]] &&
+                !followers[usersArray[i]][msg.sender] &&
                 usersArray[i] != msg.sender
             ) {
                 unfollowedUsers[count] = users[usersArray[i]];
@@ -184,7 +190,6 @@ contract SocialMedia {
     }
 
     function getUserPosts(address _user) public view returns (Post[] memory) {
-        // return posts at index specified in the uses[_user].posts array
 
         Post[] memory userPosts = new Post[](users[_user].posts.length);
         for (uint i = 0; i < users[_user].posts.length; i++) {
@@ -211,6 +216,9 @@ contract SocialMedia {
         followers[_user][msg.sender] = true;
         followersArray[_user].push(msg.sender);
 
+        users[_user].followers++;
+        users[msg.sender].following++;
+
         emit Followed(msg.sender, _user, block.timestamp);
     }
 
@@ -220,20 +228,19 @@ contract SocialMedia {
 
         followers[_user][msg.sender] = false;
 
+        users[_user].followers--;
+        users[msg.sender].following--;
+
         emit Unfollowed(msg.sender, _user, block.timestamp);
     }
 
-    function getFollowers(
-        address _user
-    ) public view returns (address[] memory) {
-        address[] memory _followers = new address[](
-            followersArray[_user].length
-        );
+    function getFollowers(address _user) public view returns (User[] memory) {
+        User[] memory _followers = new User[](followersArray[_user].length);
 
         uint count = 0;
         for (uint i = 0; i < followersArray[_user].length; i++) {
             if (followers[_user][followersArray[_user][i]]) {
-                _followers[count] = followersArray[_user][i];
+                _followers[count] = users[followersArray[_user][i]];
                 count++;
             }
         }
@@ -243,5 +250,46 @@ contract SocialMedia {
         }
 
         return _followers;
+    }
+
+    function getFollowersCount(address _user) public view returns (uint) {
+        return followersArray[_user].length;
+    }
+
+    function getFollowing(address _user) public view returns (User[] memory) {
+        User[] memory following = new User[](usersArray.length);
+
+        uint count = 0;
+        for (uint i = 0; i < usersArray.length; i++) {
+            if (followers[usersArray[i]][_user] && usersArray[i] != _user) {
+                following[count] = users[usersArray[i]];
+                count++;
+            }
+        }
+
+        assembly {
+            mstore(following, count)
+        }
+
+        return following;
+    }
+
+    function getFollowingUsersPosts() public view returns (Post[] memory) {
+        Post[] memory followingPosts = new Post[](postCount);
+        uint count = 0;
+        for (uint i = 0; i < usersArray.length; i++) {
+            if (followers[usersArray[i]][msg.sender]) {
+                for (uint j = 0; j < users[usersArray[i]].posts.length; j++) {
+                    followingPosts[count] = posts[users[usersArray[i]].posts[j]];
+                    count++;
+                }
+            }
+        }
+
+        assembly {
+            mstore(followingPosts, count)
+        }
+
+        return followingPosts;
     }
 }
