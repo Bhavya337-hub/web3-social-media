@@ -190,7 +190,6 @@ contract SocialMedia {
     }
 
     function getUserPosts(address _user) public view returns (Post[] memory) {
-
         Post[] memory userPosts = new Post[](users[_user].posts.length);
         for (uint i = 0; i < users[_user].posts.length; i++) {
             userPosts[i] = posts[users[_user].posts[i]];
@@ -280,7 +279,9 @@ contract SocialMedia {
         for (uint i = 0; i < usersArray.length; i++) {
             if (followers[usersArray[i]][msg.sender]) {
                 for (uint j = 0; j < users[usersArray[i]].posts.length; j++) {
-                    followingPosts[count] = posts[users[usersArray[i]].posts[j]];
+                    followingPosts[count] = posts[
+                        users[usersArray[i]].posts[j]
+                    ];
                     count++;
                 }
             }
@@ -291,5 +292,81 @@ contract SocialMedia {
         }
 
         return followingPosts;
+    }
+}
+
+contract PollContract {
+    SocialMedia socialMedia;
+
+    constructor(address _socialMedia) {
+        socialMedia = SocialMedia(_socialMedia);
+    }
+
+    struct Poll {
+        uint id;
+        address user;
+        string question;
+        string[] options;
+        uint totalVotes;
+        uint timestamp;
+    }
+
+    struct Vote {
+        address user;
+        uint option;
+    }
+
+    Poll[] public polls;
+    mapping(uint => Vote[]) public pollVotes;
+
+    event PollCreated(
+        address user,
+        string question,
+        string[] options,
+        uint timestamp
+    );
+
+    event Voted(address user, uint pollId, uint option, uint timestamp);
+
+    function createPoll(
+        string memory _question,
+        string[] memory _options
+    ) public {
+        require(bytes(_question).length > 0, "Question is required");
+        require(_options.length > 1, "At least two options are required");
+
+        polls.push(
+            Poll(
+                polls.length,
+                msg.sender,
+                _question,
+                _options,
+                0,
+                block.timestamp
+            )
+        );
+
+        emit PollCreated(msg.sender, _question, _options, block.timestamp);
+    }
+
+    function vote(uint _pollId, uint _option) public {
+        require(_pollId < polls.length, "Poll does not exist");
+        require(
+            _option < polls[_pollId].options.length,
+            "Option does not exist"
+        );
+
+        pollVotes[_pollId].push(Vote(msg.sender, _option));
+        polls[_pollId].totalVotes++;
+
+        emit Voted(msg.sender, _pollId, _option, block.timestamp);
+    }
+
+    function getPolls() public view returns (Poll[] memory) {
+        return polls;
+    }
+
+    function getVotes(uint _pollId) public view returns (Vote[] memory) {
+        return pollVotes[_pollId];
     }
 }

@@ -13,4 +13,12 @@ const SocialMedia = await ethers.deployContract("SocialMedia");
 
 await SocialMedia.waitForDeployment();
 
+const PollContract = await ethers.deployContract("PollContract", [
+  SocialMedia.target,
+]);
+
+await PollContract.waitForDeployment();
+
 console.log("SocialMedia smart contract deployed to:", SocialMedia.target);
+
+console.log("Poll smart contract deployed to:", PollContract.target);
