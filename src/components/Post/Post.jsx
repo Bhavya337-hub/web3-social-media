@@ -156,7 +156,7 @@ const Post = (props) => {
             </button>
           </div>
           <hr />
-          {/* Comments with avatar */}
+
           <div className="d-flex align-items-center mt-1 mb-3">
             <img
               src={
@@ -168,7 +168,7 @@ const Post = (props) => {
               className="rounded-circle post-avatar"
               alt="User"
             />
-            {/* Post a comment box */}
+
             <form className="comment-box" onSubmit={postComment}>
               <div className="form-group d-flex justify-content-between align-items-center">
                 <textarea

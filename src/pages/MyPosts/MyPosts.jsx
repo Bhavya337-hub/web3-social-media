@@ -9,11 +9,16 @@ import ConnectButton from "../../components/ConnectButton";
 import { config } from "../../../config";
 import { SocialMediaABI, SocialMediaAddress } from "../../Context/constants";
 import { useSocialMedia } from "../../Context/SocialMediaContext";
+import Welcome from "../Welcome/Welcome";
 
 const MyPosts = () => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState(null);
   const { address } = useSocialMedia();
+
+  if (!localStorage.getItem("isRegistered")) {
+    return <Welcome />;
+  }
 
   useEffect(() => {
     getPosts();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import CreatePoll from "../../components/CreatePoll/CreatePoll";
+import Welcome from "../Welcome/Welcome";
 import Poll from "../../components/Poll/Poll";
 
 import { readContract, writeContract } from "@wagmi/core";
@@ -14,6 +15,10 @@ const Polls = () => {
   useEffect(() => {
     fetchPolls();
   }, []);
+
+  if (!localStorage.getItem("isRegistered")) {
+    return <Welcome />;
+  }
 
   const fetchPolls = async () => {
     try {

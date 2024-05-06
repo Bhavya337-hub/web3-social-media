@@ -1,6 +1,6 @@
-// UserProfile.js
 import React, { useState, useEffect } from "react";
-import "./UserProfile.css"; // Import CSS file
+import "./UserProfile.css";
+import Welcome from "../Welcome/Welcome";
 
 import { readContract, writeContract } from "@wagmi/core";
 import { config } from "../../../config";
@@ -22,6 +22,10 @@ const UserProfile = () => {
     getFollowers();
     getFollowing();
   }, []);
+
+  if (!localStorage.getItem("isRegistered")) {
+    return <Welcome />;
+  }
 
   const getUser = async () => {
     try {
@@ -79,7 +83,21 @@ const UserProfile = () => {
     setShowFollowers(false);
   };
 
-  const handleUnfollow = async (username) => {};
+  const handleUnfollow = async (user) => {
+    try {
+      await writeContract(config, {
+        abi: SocialMediaABI,
+        address: SocialMediaAddress,
+        functionName: "unfollowUser",
+        args: [user],
+        account: address,
+      });
+
+      getFollowing();
+    } catch (error) {
+      console.log("Error while unfollowing user", error);
+    }
+  };
 
   return (
     <>
@@ -167,7 +185,7 @@ const UserProfile = () => {
                   </div>
                   <button
                     className="mx-5"
-                    onClick={() => handleUnfollow(followedUser.username)}
+                    onClick={() => handleUnfollow(followedUser.user)}
                   >
                     Unfollow
                   </button>

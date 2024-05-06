@@ -88,16 +88,6 @@ const Navbar = () => {
                 </div>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to="/posts" className="nav-link">
-                <div className="d-flex">
-                  <span className="material-symbols-outlined px-2">
-                    settings
-                  </span>
-                  Settings
-                </div>
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
