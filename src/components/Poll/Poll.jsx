@@ -4,6 +4,7 @@ import { readContract, writeContract } from "@wagmi/core";
 import { config } from "../../../config";
 import { useSocialMedia } from "../../Context/SocialMediaContext";
 import { PollContractABI, PollContractAddress } from "../../Context/constants";
+import getTimeSince from "../../Utils/getTime";
 
 const Poll = (props) => {
   const { poll } = props;
@@ -84,6 +85,9 @@ const Poll = (props) => {
       <div className="card mt-4">
         <div className="card-body">
           <h5 className="card-title">{poll && poll.question}</h5>
+          <p className="card-text">
+            {poll && getTimeSince(parseInt(poll.timestamp))}
+          </p>
           {/* <div className="form-check">
             <input
               className="form-check-input"

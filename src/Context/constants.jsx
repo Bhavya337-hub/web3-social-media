@@ -1,8 +1,8 @@
 import socialMedia from "../../artifacts/contracts/SocialMedia.sol/SocialMedia.json";
 import pollContract from "../../artifacts/contracts/SocialMedia.sol/PollContract.json";
 
-export const SocialMediaAddress = "0x18a8B2deD782A589a7Eb86DDbb4A6E552AC726C1";
+export const SocialMediaAddress = "0x157AA6Cc5c620732890198EB3906b8F5F3d83533";
 export const SocialMediaABI = socialMedia.abi;
 
-export const PollContractAddress = "0x67E4475155890D15426e1E1410b48A673D46454b";
+export const PollContractAddress = "0xFFd3C28fD00162875bFB95e36C1EAD972E0eEfEc";
 export const PollContractABI = pollContract.abi;

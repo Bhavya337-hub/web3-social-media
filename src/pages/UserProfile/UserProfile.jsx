@@ -135,11 +135,11 @@ const UserProfile = () => {
         {showFollowers && (
           <div className="followers">
             <h3>Followers</h3>
-            <div className="followers-list">
+            <div className="followers-list d-flex flex-column">
               {followers.map((follower, index) => (
                 <div
                   key={index}
-                  className="follower d-flex justify-content-center align-items-center"
+                  className="follower d-flex justify-content-start align-items-center"
                 >
                   <img
                     src={`${import.meta.env.VITE_GATEWAY_URL}/ipfs/${
@@ -163,7 +163,7 @@ const UserProfile = () => {
         {showFollowing && (
           <div className="following">
             <h3>Following</h3>
-            <div className="following-list">
+            <div className="following-list d-flex flex-column">
               {following.map((followedUser, index) => (
                 <div
                   key={index}
