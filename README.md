@@ -1,6 +1,6 @@
 **Web3 Social Media Platform**
 
-**Project Overview:** This project aims to develop a decentralized social media platform leveraging Web3 technologies. Users can interact with each other through posts, comments, likes, and polls. The platform ensures privacy, security, and transparency by storing data on the Ethereum blockchain and utilizing off-chain storage via IPFS.
+**Project Overview:** This project aims to develop a decentralized social media platform leveraging Web3 technologies. Users can interact with each other through posts, comments, likes, and polls. The platform ensures privacy, security, and transparency by storing data on the Ethereum blockchain and utilizing off-chain storage via IPFS
 
 **Project Structure:**
 
